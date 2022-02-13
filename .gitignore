@@ -1,0 +1,3 @@
+log/mysql/*.log
+redis/data/dump.rdb
+.env

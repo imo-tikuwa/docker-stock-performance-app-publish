@@ -1,0 +1,53 @@
+version: "3.8"
+volumes:
+    db-store:
+    php-fpm-socket:
+services:
+    redis:
+        build: ./docker/redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - "./redis/data:/data"
+
+    app:
+        build: ./docker/php
+        volumes:
+            - php-fpm-socket:/var/run/php-fpm
+            - ./cake_app:/var/www/cake_app
+        environment:
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            CAKE_SECURITY_SALT: $CAKE_SECURITY_SALT
+        depends_on:
+            db:
+                condition: service_healthy
+
+    web:
+        build: ./docker/nginx
+        ports:
+            - 80:80
+        volumes:
+            - php-fpm-socket:/var/run/php-fpm
+            - ./cake_app:/var/www/cake_app
+
+    db:
+        build: ./docker/mysql
+        volumes:
+            - db-store:/var/lib/mysql
+            - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+            - ./log/mysql:/var/log/mysql
+        ports:
+            - $MYSQL_PUBLISHED_PORT:3306
+        environment:
+            MYSQL_DATABASE: $MYSQL_DATABASE
+            MYSQL_USER: $MYSQL_USER
+            MYSQL_PASSWORD: $MYSQL_PASSWORD
+            MYSQL_ROOT_PASSWORD: ''
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+            TZ: Asia/Tokyo
+        healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+            timeout: 20s
+            retries: 10
