@@ -1,12 +1,15 @@
 FROM php:8.0-fpm-buster
 SHELL ["/bin/bash", "-oeux", "pipefail", "-c"]
 
+ARG UID=1000
+ARG GID=1000
 ENV TZ=Asia/Tokyo \
-    COMPOSER_ALLOW_SUPERUSER=1 \
     COMPOSER_HOME=/composer
-
-RUN echo "${TZ}" > /etc/timezone \
-    && dpkg-reconfigure -f noninteractive tzdata
+RUN groupmod -o -g ${GID} www-data && \
+    usermod -o -u ${UID} -g www-data www-data && \
+    chown -R www-data: /var/www && \
+    echo "${TZ}" > /etc/timezone && \
+    dpkg-reconfigure -f noninteractive tzdata
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -35,7 +38,9 @@ RUN apt-get update && \
     docker-php-ext-enable redis && \
     { \
         echo "alias ll='ls -l --color=auto'"; \
-    } >> /root/.bashrc
+    } >> /root/.bashrc && \
+    mkdir ${COMPOSER_HOME} && \
+    chown -R www-data: ${COMPOSER_HOME}
 
 COPY ./php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./php.ini /usr/local/etc/php/php.ini
