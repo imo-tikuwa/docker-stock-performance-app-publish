@@ -28,6 +28,7 @@ services:
         build: ./docker/nginx
         ports:
             - 80:80
+            - 443:443
         volumes:
             - php-fpm-socket:/var/run/php-fpm
             - ./cake_app:/var/www/cake_app
@@ -37,7 +38,6 @@ services:
         volumes:
             - db-store:/var/lib/mysql
             - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
-            - ./log/mysql:/var/log/mysql
         ports:
             - $MYSQL_PUBLISHED_PORT:3306
         environment:
