@@ -1,11 +1,13 @@
-FROM nginx:1.20-alpine
+FROM nginx:1.21-alpine
 SHELL ["/bin/ash", "-oeux", "pipefail", "-c"]
 
 ENV TZ=Asia/Tokyo
 
-RUN adduser -H -S www-data -u 1000 && \
-    apk update && \
-    apk add --update --no-cache --virtual=.build-dependencies g++ tzdata
+RUN apk update && \
+    apk add --update --no-cache --virtual=.build-dependencies g++ tzdata shadow && \
+    groupmod www-data -g 1000 && \
+    useradd -u 1000 -g www-data www-data && \
+    apk del .build-dependencies
 
 COPY ./conf.d/default.conf /etc/nginx/conf.d/default.conf
 COPY ./nginx.conf /etc/nginx/nginx.conf

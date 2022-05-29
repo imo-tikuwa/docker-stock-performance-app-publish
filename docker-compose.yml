@@ -16,6 +16,7 @@ services:
             - php-fpm-socket:/var/run/php-fpm
             - ./cake_app:/var/www/cake_app
         environment:
+            FQDN: $FQDN
             MYSQL_DATABASE: $MYSQL_DATABASE
             MYSQL_USER: $MYSQL_USER
             MYSQL_PASSWORD: $MYSQL_PASSWORD
