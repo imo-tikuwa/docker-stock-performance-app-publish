@@ -1,3 +1,4 @@
-log/mysql/*.log
-redis/data/dump.rdb
 .env
+redis/data/dump.rdb
+dump/*
+!.gitkeep

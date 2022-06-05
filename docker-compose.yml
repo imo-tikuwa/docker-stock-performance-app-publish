@@ -28,8 +28,8 @@ services:
     web:
         build: ./docker/nginx
         ports:
-            - 80:80
-            - 443:443
+            - $HTTP_PUBLISHED_PORT:80
+            - $HTTPS_PUBLISHED_PORT:443
         volumes:
             - php-fpm-socket:/var/run/php-fpm
             - ./cake_app:/var/www/cake_app
@@ -48,6 +48,8 @@ services:
             MYSQL_ROOT_PASSWORD: ''
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
             TZ: Asia/Tokyo
+        cap_add:
+            - SYS_NICE
         healthcheck:
             test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
             timeout: 20s

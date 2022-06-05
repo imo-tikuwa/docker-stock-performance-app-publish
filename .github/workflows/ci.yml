@@ -14,12 +14,12 @@ defaults:
 
 jobs:
   phpunit-test:
-    name: PHP 8.0 PHPUnit
+    name: PHP 8.1 PHPUnit
     runs-on: ubuntu-20.04
 
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8.0
         ports:
           - 3306:3306
         env:
@@ -38,7 +38,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.0
+        php-version: 8.1
         extensions: mbstring, intl, pdo_mysql, fileinfo
         coverage: none
 
@@ -64,7 +64,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.0'
+        php-version: '8.1'
         extensions: mbstring, intl
         coverage: none
 
@@ -87,7 +87,7 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.0'
+        php-version: '8.1'
         extensions: mbstring, intl
         coverage: none
 
