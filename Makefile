@@ -56,6 +56,9 @@ app-check-all:
 	@make app-phpcs
 	@make app-phpstan
 
+db-dump:
+	bash mysqldump.sh
+
 down:
 	docker-compose down
 down-all:
