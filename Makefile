@@ -2,14 +2,14 @@ up:
 	docker-compose up -d
 init:
 	docker-compose up -d --build
-	docker-compose exec --user=www-data app cp -f config/.env.default config/.env
+	docker-compose exec --user=www-data app cp -f config/.env.example config/.env
 	docker-compose exec --user=www-data app bash -c 'sed -i \
-	-e "s/^export DEBUG=\"true\"/export DEBUG=\"false\"/g" \
-	-e "s/^export SECURITY_SALT=\"__SALT__\"/export SECURITY_SALT=\"$$CAKE_SECURITY_SALT\"/g" \
-	-e "s/^export DATABASE_HOST=\"127.0.0.1\"/export DATABASE_HOST=\"db\"/g" \
-	-e "s/^export DATABASE_NAME=\"dbname\"/export DATABASE_NAME=\"$$MYSQL_DATABASE\"/g" \
-	-e "s/^export DATABASE_USER=\"dbuser\"/export DATABASE_USER=\"$$MYSQL_USER\"/g" \
-	-e "s/^export DATABASE_PASS=\"dbpassword\"/export DATABASE_PASS=\"$$MYSQL_PASSWORD\"/g" \
+	-e "s/^DEBUG=\"true\"/DEBUG=\"false\"/g" \
+	-e "s/^SECURITY_SALT=\"__SALT__\"/SECURITY_SALT=\"$$CAKE_SECURITY_SALT\"/g" \
+	-e "s/^DATABASE_HOST=\"127.0.0.1\"/DATABASE_HOST=\"db\"/g" \
+	-e "s/^DATABASE_NAME=\"dbname\"/DATABASE_NAME=\"$$MYSQL_DATABASE\"/g" \
+	-e "s/^DATABASE_USER=\"dbuser\"/DATABASE_USER=\"$$MYSQL_USER\"/g" \
+	-e "s/^DATABASE_PASS=\"dbpassword\"/DATABASE_PASS=\"$$MYSQL_PASSWORD\"/g" \
 	config/.env'
 	docker-compose exec --user=www-data app cp -f config/app_for_docker.php config/app_local.php
 	docker-compose exec --user=www-data app composer install --no-interaction --no-dev

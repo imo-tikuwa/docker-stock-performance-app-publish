@@ -49,7 +49,7 @@ jobs:
 
     - name: Run PHPUnit
       run: |
-        cp -f config/.env.default config/.env
+        cp -f config/.env.example config/.env
         vendor/bin/phpunit
 
   coding-standard:
